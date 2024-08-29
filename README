@@ -1,0 +1,50 @@
+Tema 2 - SO
+Autor: Catalin-Alexandru Ripanu
+Grupa: 333CC
+Timp alocat implementarii: ~ 2 zile
+
+Ideea principala a rezolvarii consta in gestionarea unei liste simplu inlantuite
+care foloseste, drept noduri, adrese ce guverneaza blocuri alocate de memorie.
+Fiecare functie (malloc(), realloc(), get_free_block(), etc) foloseste 2
+variabile globale, si anume first_free_block, last_free_block, pentru a se
+putea adauga, in mod corespunzator, toate blocurile construite, in lista.
+
+Evident, se mai folosesc alte 2 variabile globale, no_brk_alloc si no_mmap_alloc,
+pentru a retine numarul de alocari pe heap, respectiv numarul de alocari folosind
+mmap(). Acest lucru este necesar pentru partea initiala de prealocare.
+
+Pentru functia de get_free_block(), s-a ales parcurgerea listei pentru a gasi 
+blocul cu dimensiunea cea mai apropiata de cea cautata. Evident, daca ultimul
+bloc este liber, se prefera extinderea acestuia.
+
+Functia de split_block() construieste o noua adresa pentru a separa partea
+alocata de partea libera. Aceasta functie are rolul de a mari performantele
+alocatorului respectiv prin folosirea eficienta a blocurilor de memorie.
+
+Functia de merge_block() se ocupa de concatenarea blocurilor libere adiacente
+primite ca argumente. Aceasta functie este folosita in cadrul functiilor de
+malloc(), free(), calloc() si realloc() pentru a prelucra, de fiecare data,
+lista de blocuri, atunci cand se apeleaza functia de cautare.
+
+os_malloc() reprezinta implementarea minimala a functiei malloc() care incearca
+tratarea mai multor cazuri de utilizare prezentate in enuntul temei. Evident,
+comportamentul functiei depinde de marimea size-ului dat ca argument.
+
+os_calloc() reprezinta implementarea minimala a functiei calloc() care incearca
+sa se foloseasca de functia anterioara, si anume os_malloc(). De asemenea, se
+foloseste memset() pentru a putea initializa toti octetii din bloc.
+
+os_free() reprezinta implementarea minimala a functiei free() care verifica daca
+adresa data ca argument este valida, cu alte cuvinte, verifica daca adresa are
+un bloc asociat in lista. Evident, se trateaza fiecare caz ce are legatura cu
+status-ul blocului.
+
+os_realloc() reprezinta implementarea minimala a functiei realloc() care verifica
+daca size-ul dat ca argument se incadreaza in anumite limite. Folosind descrierea
+din enunt, aceasta functie trateaza in mod specific fiecare situatie.
+
+Cateva referinte:
+https://medium.com/a-42-journey/how-to-create-your-own-malloc-library-b86fedd39b96
+https://arjunsreedharan.org/
+
+Catalin-Alexandru Ripanu
